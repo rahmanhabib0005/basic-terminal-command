@@ -1,80 +1,90 @@
-## Information Gathering & Reconnaissance Reference Guide
-This guide contains essential built-in PowerShell commands for collecting network, system, and hardware information on Windows machines.
-------------------------------
-## 📋 Table of Contents
+# Information Gathering Reference Guide
 
-   1. Network & IP Information Collectors
-   2. Domain & DNS Information Collectors
-   3. System Hardware & OS Collectors
-   4. Process & Security Collectors
-   5. Data Export Shortcuts
+Essential built-in PowerShell commands for collecting network, system, and hardware information on Windows machines.
 
-------------------------------
-## 1. Network & IP Information Collectors## Get Local IP Addresses
-Replaces the legacy ipconfig command. Extracts IPv4 addresses and interface names.
+---
 
+## 1. Network & IP Information
+
+### Get Local IP Addresses
+```powershell
 Get-NetIPAddress -AddressFamily IPv4 | Format-Table IPAddress, InterfaceAlias
+```
 
-## View Network Routing Table
-Replaces route print. Shows where network traffic is being directed.
-
+### View Network Routing Table
+```powershell
 Get-NetRoute -AddressFamily IPv4
+```
 
-## Check Active Connections and Listening Ports
-Replaces netstat. Lists ports currently waiting for or handling active connections.
-
+### Check Active Connections and Listening Ports
+```powershell
 Get-NetTCPConnection -State Listen
+```
 
-## Test Remote Port Status
-Replaces telnet. Verifies if a specific port is open on a target server.
-
+### Test Remote Port Status
+```powershell
 Test-NetConnection google.com -Port 80
+```
 
-------------------------------
-## 2. Domain & DNS Information Collectors## Resolve DNS Records
-Replaces nslookup. Gathers clean, formatted DNS data (A, MX, TXT, NS).
+---
 
+## 2. Domain & DNS Information
+
+### Resolve DNS Records
+```powershell
 Resolve-DnsName google.com -Type MX
+```
 
-## Query Domain Ownership Data (Whois alternative)
-Uses the web-based RDAP protocol to grab registration details for an IP address.
-
+### Query Domain Ownership Data
+```powershell
 Invoke-RestMethod -Uri "https://arin.net"
+```
 
-------------------------------
-## 3. System Hardware & OS Collectors## Summary of System Specifications
-Replaces systeminfo. Provides OS version, BIOS strings, and machine models.
+---
 
+## 3. System Hardware & OS
+
+### Summary of System Specifications
+```powershell
 Get-ComputerInfo | Select-Object OsName, OsVersion, CsModel, BiosVersion
+```
 
-## Collect Installed RAM Hardware Details
-Queries physical memory sticks to report capacity (in bytes) and hardware speed.
-
+### Collect Installed RAM Hardware Details
+```powershell
 Get-CimInstance Win32_PhysicalMemory | Format-Table Capacity, Speed
+```
 
-## Collect Disk Space Storage Information
-Displays total size and remaining free space for available local storage drives.
-
+### Collect Disk Space Storage Information
+```powershell
 Get-CimInstance Win32_LogicalDisk | Format-Table DeviceID, VolumeName, Size, FreeSpace
+```
 
-------------------------------
-## 4. Process & Security Collectors## List Top 10 CPU-Consuming Processes
-Tracks currently executing applications and sorts them by heavy processor utilization.
+---
 
+## 4. Process & Security
+
+### List Top 10 CPU-Consuming Processes
+```powershell
 Get-Process | Sort-Object CPU -Descending | Select-Object -First 10 ProcessName, CPU, WorkingSet
+```
 
-## Review Installed OS Security Patches
-Lists all applied Windows updates and hotfixes sorted by the installation date.
-
+### Review Installed OS Security Patches
+```powershell
 Get-HotFix | Sort-Object InstalledOn -Descending
+```
 
-------------------------------
+---
+
 ## 5. Data Export Shortcuts
-To save the information gathered by any command above, append an export pipe to the end of the line:
 
-* Export to Text file: | Out-File C:\path\to\output.txt
-* Export to CSV spreadsheet: | Export-Csv C:\path\to\output.csv -NoTypeInformation
+Append these to the end of any command using the pipe (`|`) character to save your results:
 
-------------------------------
-Would you like help combining these into an automated PowerShell script (.ps1) that exports a full report automatically, or do you need to gather information from Active Directory?
+### Export to Text file
+```powershell
+ | Out-File C:\(\path\to\output.\)txt
+```
 
+### Export to CSV spreadsheet
+```powershell
+ | Export-Csv C:\(\path\to\output.\)csv -NoTypeInformation
+```
